@@ -7,11 +7,13 @@ import com.pm.patientservice.exception.PatientNotFoundException;
 import com.pm.patientservice.mapper.PatientMapper;
 import com.pm.patientservice.model.Patient;
 import com.pm.patientservice.repository.PatientRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class PatientService {
     private final PatientRepository patientRepository;
@@ -46,5 +48,13 @@ public class PatientService {
 
         PatientMapper.updateEntity(updatedPatient, patientRequestDTO);
         return PatientMapper.toDTO(patientRepository.save(updatedPatient));
+    }
+
+    public void deletePatient(UUID id) {
+        Patient patient = patientRepository.findById(id).orElseThrow(()-> new PatientNotFoundException("Patient Not Found with the ID: " + id));
+        log.info("Deleting patient with id={}", id);
+
+        patientRepository.delete(patient);
+        log.info("Patient deleted with id={}", id);
     }
 }
