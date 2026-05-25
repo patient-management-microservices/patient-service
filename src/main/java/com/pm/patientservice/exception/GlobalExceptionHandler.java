@@ -8,8 +8,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @ControllerAdvice
@@ -24,11 +27,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<Map<String, String>> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex, HttpServletRequest request) {
 
         logException(ex);
-        Map<String, String> errorResponse = errorResponseBody(
-                HttpStatus.BAD_REQUEST.toString(),
+        Map<String, Object> errorResponse = errorResponseBody(
+                HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 request.getRequestURI(),
                 ex.getMessage()
@@ -38,11 +41,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PatientNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handlePatientNotFoundException(PatientNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> handlePatientNotFoundException(PatientNotFoundException ex, HttpServletRequest request) {
 
         logException(ex);
-        Map<String, String> errorResponse = errorResponseBody(
-                HttpStatus.NOT_FOUND.toString(),
+        Map<String, Object> errorResponse = errorResponseBody(
+                HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 request.getRequestURI(),
                 ex.getMessage()
@@ -64,13 +67,13 @@ public class GlobalExceptionHandler {
         );
     }
 
-    private Map<String, String> errorResponseBody(String status, String reasonPhrase, String path, String message) {
-        Map<String, String> error = new HashMap<>();
+    private Map<String, Object> errorResponseBody(int status, String reasonPhrase, String path, String message) {
+        Map<String, Object> error = new HashMap<>();
         error.put("status", status);
         error.put("error", reasonPhrase);
         error.put("path", path);
         error.put("message", message);
-        error.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        error.put("timestamp", OffsetDateTime.now(ZoneOffset.UTC).toString());
         return error;
     }
 }
