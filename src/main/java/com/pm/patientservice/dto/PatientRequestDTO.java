@@ -1,6 +1,7 @@
 package com.pm.patientservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.pm.patientservice.dto.validators.CreatePatientValidationGroup;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -20,6 +21,8 @@ public class PatientRequestDTO {
     @Email(message = "Email should be valid")
     private String email;
 
+//    @NotBlank(groups = CreatePatientValidationGroup.class, message = "Address is required")
+//    In the controller add @Validated({Default.class, CreatePatientValidationGroup.class})
     @NotBlank(message = "Address is required")
     private String address;
 
