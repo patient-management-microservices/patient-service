@@ -30,8 +30,8 @@ public class PatientService {
     }
 
     public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
-        if(patientRepository.existsByEmail(patientRequestDTO.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists: " + patientRequestDTO.getEmail());
+        if(patientRepository.existsByEmail(patientRequestDTO.email())) {
+            throw new EmailAlreadyExistsException("Email already exists: " + patientRequestDTO.email());
         }
 
         Patient newPatient = patientRepository.save(PatientMapper.toEntity(patientRequestDTO));
@@ -42,8 +42,8 @@ public class PatientService {
 
         Patient updatedPatient = patientRepository.findById(id).orElseThrow(()-> new PatientNotFoundException("Patient Not Found with the ID: " + id));
 
-        if(patientRepository.existsByEmailAndIdNot(patientRequestDTO.getEmail(), id)) {
-            throw new EmailAlreadyExistsException("Email already exists: " + patientRequestDTO.getEmail());
+        if(patientRepository.existsByEmailAndIdNot(patientRequestDTO.email(), id)) {
+            throw new EmailAlreadyExistsException("Email already exists: " + patientRequestDTO.email());
         }
 
         PatientMapper.updateEntity(updatedPatient, patientRequestDTO);

@@ -1,14 +1,10 @@
 package com.pm.patientservice.dto;
 
-import lombok.Builder;
-import lombok.Getter;
 
-@Getter
-@Builder
-public class PatientResponseDTO {
-    private String id;
-    private String name;
-    private String email;
-    private String address;
-    private String dateOfBirth;
-}
+public record PatientResponseDTO (
+    String id,
+    String name,
+    String email,
+    String address,
+    String dateOfBirth
+) {}
