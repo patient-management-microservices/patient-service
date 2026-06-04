@@ -1,5 +1,5 @@
 -- Ensure the 'patient' table exists
-CREATE TABLE IF NOT EXISTS PUBLIC.patient
+CREATE TABLE IF NOT EXISTS patient
 (
     id              UUID PRIMARY KEY,
     name            VARCHAR(255)        NOT NULL,
