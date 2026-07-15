@@ -1,12 +1,16 @@
 name: Deploy Patient Service
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Build and Publish Docker Image"]
+    types:
+      - completed
 
 jobs:
   deploy:
+    # Only deploy if the build workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     runs-on: self-hosted
 
     steps:
@@ -20,8 +24,8 @@ jobs:
 
           cd ..
 
-          echo "Building Docker image..."
-          docker compose build patient-service
+          echo "Pulling latest Docker image..."
+          docker compose pull patient-service
 
           echo "Restarting container..."
           docker compose up -d patient-service
